@@ -2,6 +2,7 @@ import React from "react";
 import Person from "./Person";
 
 export default function Persons({ persons }) {
+  // sort persons by name
   function sortByName(a, b) {
     const nameA = a.props.name.toUpperCase();
     const nameB = b.props.name.toUpperCase();
