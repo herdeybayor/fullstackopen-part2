@@ -1,4 +1,5 @@
 import React from "react";
+import personService from "../services/persons";
 
 export default function PersonForm({
   persons,
@@ -15,6 +16,7 @@ export default function PersonForm({
     const find = persons.find(
       (person) => person.name.toLowerCase() === newName.toLowerCase()
     );
+
     if (!newName) {
       alert("Enter a name");
       return;
@@ -24,12 +26,33 @@ export default function PersonForm({
       return;
     }
     if (find) {
-      alert(`${newName} is already added to phonebook`);
+      const confirmation = window.confirm(
+        `${find.name} is already added to phonebook, replace the old number with a new one?`
+      );
+      if (confirmation) {
+        const changedPerson = { ...find, number: newNumber };
+        personService.update(find.id, changedPerson).then((updatedPerson) => {
+          setPersons(
+            persons
+              .filter((person) => person.id !== find.id)
+              .concat(updatedPerson)
+          );
+          setNewName("");
+          setNewNumber("");
+        });
+      } else {
+        setNewName("");
+        setNewNumber("");
+        return;
+      }
       return;
     }
-    setPersons((prevValue) => {
-      return [...prevValue, { name: newName, number: newNumber }];
-    });
+    const newPerson = { name: newName, number: newNumber };
+
+    personService
+      .create(newPerson)
+      .then((newPerson) => setPersons([...persons, newPerson]));
+
     setNewName("");
     setNewNumber("");
   }

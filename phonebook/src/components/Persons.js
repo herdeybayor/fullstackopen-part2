@@ -1,7 +1,7 @@
 import React from "react";
 import Person from "./Person";
 
-export default function Persons({ persons }) {
+export default function Persons({ persons, setPersons }) {
   // sort persons by name
   function sortByName(a, b) {
     const nameA = a.props.name.toUpperCase();
@@ -12,8 +12,15 @@ export default function Persons({ persons }) {
   return (
     <div>
       {persons
-        .map(({ name, number }, index) => (
-          <Person name={name} number={number} key={index} />
+        .map(({ name, number, id }) => (
+          <Person
+            setPersons={setPersons}
+            persons={persons}
+            name={name}
+            id={id}
+            number={number}
+            key={id}
+          />
         ))
         .sort(sortByName)}
     </div>

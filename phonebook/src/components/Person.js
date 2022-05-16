@@ -1,10 +1,21 @@
 import React from "react";
+import personService from "../services/persons";
 
-export default function Person({ name, number }) {
+export default function Person({ name, number, id, persons, setPersons }) {
+  const handleDelete = (e) => {
+    e.preventDefault();
+    const confirmation = window.confirm(`Delete ${name}?`);
+    if (confirmation) {
+      personService
+        .deletePerson(id)
+        .then(() => setPersons(persons.filter((person) => person.id !== id)));
+    }
+  };
+
   return (
     <>
       <p>
-        {name} {number}
+        {name} {number} <button onClick={(e) => handleDelete(e)}>delete</button>
       </p>
     </>
   );
