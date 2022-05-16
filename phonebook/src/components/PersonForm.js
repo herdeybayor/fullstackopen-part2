@@ -10,6 +10,8 @@ export default function PersonForm({
   setPersons,
   onNameChange,
   onNumberChange,
+  setErrorMessage,
+  setSuccessMessage,
 }) {
   function handleSubmit(e) {
     e.preventDefault();
@@ -18,11 +20,11 @@ export default function PersonForm({
     );
 
     if (!newName) {
-      alert("Enter a name");
+      setErrorMessage("Enter a name");
       return;
     }
     if (!newNumber) {
-      alert("Enter a number");
+      setErrorMessage("Enter a number");
       return;
     }
     if (find) {
@@ -39,6 +41,7 @@ export default function PersonForm({
           );
           setNewName("");
           setNewNumber("");
+          setSuccessMessage(`${updatedPerson.name} Updated!`);
         });
       } else {
         setNewName("");
@@ -49,9 +52,10 @@ export default function PersonForm({
     }
     const newPerson = { name: newName, number: newNumber };
 
-    personService
-      .create(newPerson)
-      .then((newPerson) => setPersons([...persons, newPerson]));
+    personService.create(newPerson).then((newPerson) => {
+      setPersons([...persons, newPerson]);
+      setSuccessMessage(`${newPerson.name} Added!`);
+    });
 
     setNewName("");
     setNewNumber("");

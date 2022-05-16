@@ -1,7 +1,12 @@
 import React from "react";
 import Person from "./Person";
 
-export default function Persons({ persons, setPersons }) {
+export default function Persons({
+  persons,
+  setPersons,
+  setErrorMessage,
+  setSuccessMessage,
+}) {
   // sort persons by name
   function sortByName(a, b) {
     const nameA = a.props.name.toUpperCase();
@@ -14,6 +19,8 @@ export default function Persons({ persons, setPersons }) {
       {persons
         .map(({ name, number, id }) => (
           <Person
+            setErrorMessage={setErrorMessage}
+            setSuccessMessage={setSuccessMessage}
             setPersons={setPersons}
             persons={persons}
             name={name}
