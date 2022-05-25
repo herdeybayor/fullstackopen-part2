@@ -19,30 +19,33 @@ export default function PersonForm({
       (person) => person.name.toLowerCase() === newName.toLowerCase()
     );
 
-    if (!newName) {
-      setErrorMessage("Enter a name");
-      return;
-    }
-    if (!newNumber) {
-      setErrorMessage("Enter a number");
-      return;
-    }
+    // if (!newName) {
+    //   setErrorMessage("Enter a name");
+    //   return;
+    // }
+    // if (!newNumber) {
+    //   setErrorMessage("Enter a number");
+    //   return;
+    // }
     if (find) {
       const confirmation = window.confirm(
         `${find.name} is already added to phonebook, replace the old number with a new one?`
       );
       if (confirmation) {
         const changedPerson = { ...find, number: newNumber };
-        personService.update(find.id, changedPerson).then((updatedPerson) => {
-          setPersons(
-            persons
-              .filter((person) => person.id !== find.id)
-              .concat(updatedPerson)
-          );
-          setNewName("");
-          setNewNumber("");
-          setSuccessMessage(`${updatedPerson.name} Updated!`);
-        });
+        personService
+          .update(find.id, changedPerson)
+          .then((updatedPerson) => {
+            setPersons(
+              persons
+                .filter((person) => person.id !== find.id)
+                .concat(updatedPerson)
+            );
+            setNewName("");
+            setNewNumber("");
+            setSuccessMessage(`${updatedPerson.name} Updated!`);
+          })
+          .catch((error) => setErrorMessage(error.response.data.error));
       } else {
         setNewName("");
         setNewNumber("");
@@ -52,10 +55,13 @@ export default function PersonForm({
     }
     const newPerson = { name: newName, number: newNumber };
 
-    personService.create(newPerson).then((newPerson) => {
-      setPersons([...persons, newPerson]);
-      setSuccessMessage(`${newPerson.name} Added!`);
-    });
+    personService
+      .create(newPerson)
+      .then((newPerson) => {
+        setPersons([...persons, newPerson]);
+        setSuccessMessage(`${newPerson.name} Added!`);
+      })
+      .catch((error) => setErrorMessage(error.response.data.error));
 
     setNewName("");
     setNewNumber("");
